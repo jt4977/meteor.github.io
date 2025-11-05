@@ -3,8 +3,8 @@ title: "meteor"
 author: "jh4977"
 date: "2025-11-05"
 output:
-  pdf_document: default
   github_document: default
+  pdf_document: default
 ---
 
 In recent years, the impacts of climate variability and extreme weather events have become increasingly evident across New York State. Understanding local climatic patterns is essential not only for environmental monitoring, but also for informing public health preparedness, agricultural planning, and infrastructure resilience. Despite the availability of rich meteorological datasets, there remains a need for integrated analytical approaches that combine visualization, statistical modeling, and predictive analysis to uncover underlying patterns and trends in regional climate behavior.

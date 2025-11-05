@@ -1,0 +1,29 @@
+meteor
+================
+jh4977
+2025-11-05
+
+In recent years, the impacts of climate variability and extreme weather
+events have become increasingly evident across New York State.
+Understanding local climatic patterns is essential not only for
+environmental monitoring, but also for informing public health
+preparedness, agricultural planning, and infrastructure resilience.
+Despite the availability of rich meteorological datasets, there remains
+a need for integrated analytical approaches that combine visualization,
+statistical modeling, and predictive analysis to uncover underlying
+patterns and trends in regional climate behavior.
+
+This project aims to leverage five years of comprehensive weather data
+from New York State to visualize and model key climatic variables such
+as temperature, precipitation, and wind speed. Through interactive
+spatial visualizations—such as precipitation heatmaps across
+counties—and regression-based analyses, we will identify the major
+meteorological and geographic factors that shape local weather dynamics.
+Furthermore, by applying time-series forecasting models, we aim to
+predict future climatic trends and provide data-driven insights that
+could support regional planning and climate adaptation strategies.
+
+Ultimately, this project seeks to demonstrate the power of data
+analytics in translating complex weather information into actionable
+knowledge, while showcasing technical proficiency in data cleaning,
+visualization, regression modeling, and time-series forecasting.
