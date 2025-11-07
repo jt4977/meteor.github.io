@@ -3,7 +3,6 @@ title: "meteor"
 author: "jh4977"
 date: "2025-11-05"
 output:
-  pdf_document: default
   github_document: default
 ---
 # **Proposal**
@@ -26,10 +25,43 @@ Ultimately, this project seeks to demonstrate the power of data analytics in tra
 ### **Anticipated Data Sources**
 
 ### **Planned Analyses/ Visualizations**
+Exploratory Data Analysis.
+Describe spatial and temporal distributions of temperature, precipitation, and wind speed using histograms, density plots, seasonal subseries, calendar heatmaps, and county-level choropleths. Quantify autocorrelation and inter-variable dependence via correlation heatmaps and lagged correlations. 
+
+Spatiotemporal Association Modeling.  
+Fit interpretable regression families (linear/GLM, mixed-effects) to quantify associations between meteorological outcomes and geographic climatic drivers, with county-level random effects where appropriate. Use two-part models for precipitation. Report coefficient forest plots, marginal effects, residual diagnostics, and space–time cross-validation errors.
+
+Forecasting & Predictive Evaluation.
+Build short-horizon forecasts with rolling-origin evaluation. For extreme events, train parsimonious classifiers. Evaluate with RMSE/MAE.
+
+Visualization Deliverables.
+Standardized map suite like levels and anomalies, seasonal and calendar plots, correlation and diagnostics, coefficient and marginal-effect displays, forecast fan charts and rolling-error summaries.
 
 ### **Coding Challenges**
 
 ### **Planned Timeline**
+Phase I — Introduction & Framing (Early November)
+Goal: Establish the analytic scope and motivation for a five‑year, New York State–focused climate analysis.  
+Deliverables: Background paragraphs, research questions, simple analysis flow schematic.  
+
+Phase II — Data Cleaning & Harmonization (Early to Mid‑November)
+Goal: Acquire and standardize public meteorological data; produce a single analysis‑ready table keyed to geographic identifiers.
+Deliverables: Cleaned dataset, data‑quality summary (coverage/missingness), brief data dictionary.  
+
+Phase III — Exploratory Analysis & Visualization (Mid to Late November)
+Goal: Describe spatial and temporal patterns in temperature, precipitation, and wind speed to inform modeling.  
+Deliverables: EDA portfolio (maps, heatmaps, seasonal plots) with short captions.
+
+Phase IV — Statistical & Predictive Modeling (Late November to Early December)
+Goal: Fit an interpretable regression for associations and a short‑horizon forecaster with uncertainty quantification.  
+Deliverables: Model summary with diagnostics, forecast error or coverage summary, brief limitations note.  
+
+Phase V — Results, Discussion & Integration (Early to Mid‑December)
+Goal: Synthesize evidence into a coherent narrative with implications for monitoring and resilience.  
+Deliverables: Finalized figures, completed Results & Discussion, compiled PDF + GitHub document.  
 
 ### **Project Structure**
+
+
+
 

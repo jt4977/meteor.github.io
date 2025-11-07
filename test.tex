@@ -1,0 +1,186 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={meteor},
+  pdfauthor={jh4977},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{meteor}
+\author{jh4977}
+\date{2025-11-05}
+
+\begin{document}
+\maketitle
+
+\section{\texorpdfstring{\textbf{Proposal}}{Proposal}}\label{proposal}
+
+\subsubsection{\texorpdfstring{\textbf{Group
+Numbers}}{Group Numbers}}\label{group-numbers}
+
+Jingtong He(jh4977), Chuyuan Xu(cx2347), Anqi Li(al4771), Xiwei
+Fu(xf2290), Kaicheng Mo(km4071)
+
+\subsubsection{\texorpdfstring{\textbf{Tentative Project
+Title}}{Tentative Project Title}}\label{tentative-project-title}
+
+\subsubsection{\texorpdfstring{\textbf{Motivation}}{Motivation}}\label{motivation}
+
+In recent years, the impacts of climate variability and extreme weather
+events have become increasingly evident across New York State.
+Understanding local climatic patterns is essential not only for
+environmental monitoring, but also for informing public health
+preparedness, agricultural planning, and infrastructure resilience.
+Despite the availability of rich meteorological datasets, there remains
+a need for integrated analytical approaches that combine visualization,
+statistical modeling, and predictive analysis to uncover underlying
+patterns and trends in regional climate behavior.
+
+This project aims to leverage five years of comprehensive weather data
+from New York State to visualize and model key climatic variables such
+as temperature, precipitation, and wind speed. Through interactive
+spatial visualizations---such as precipitation heatmaps across
+counties---and regression-based analyses, we will identify the major
+meteorological and geographic factors that shape local weather dynamics.
+Furthermore, by applying time-series forecasting models, we aim to
+predict future climatic trends and provide data-driven insights that
+could support regional planning and climate adaptation strategies.
+
+Ultimately, this project seeks to demonstrate the power of data
+analytics in translating complex weather information into actionable
+knowledge, while showcasing technical proficiency in data cleaning,
+visualization, regression modeling, and time-series forecasting.
+
+\subsubsection{\texorpdfstring{\textbf{Variable
+Introduction}}{Variable Introduction}}\label{variable-introduction}
+
+\subsubsection{\texorpdfstring{\textbf{Intended Final
+Products}}{Intended Final Products}}\label{intended-final-products}
+
+\subsubsection{\texorpdfstring{\textbf{Anticipated Data
+Sources}}{Anticipated Data Sources}}\label{anticipated-data-sources}
+
+\subsubsection{\texorpdfstring{\textbf{Planned Analyses/
+Visualizations}}{Planned Analyses/ Visualizations}}\label{planned-analyses-visualizations}
+
+Exploratory Data Analysis. Describe spatial and temporal distributions
+of temperature, precipitation, and wind speed using histograms, density
+plots, seasonal subseries, calendar heatmaps, and county-level
+choropleths. Quantify autocorrelation and inter-variable dependence via
+correlation heatmaps and lagged correlations.
+
+Spatiotemporal Association Modeling.\\
+Fit interpretable regression families (linear/GLM, mixed-effects) to
+quantify associations between meteorological outcomes and geographic
+climatic drivers, with county-level random effects where appropriate.
+Use two-part models for precipitation. Report coefficient forest plots,
+marginal effects, residual diagnostics, and space--time cross-validation
+errors.
+
+Forecasting \& Predictive Evaluation. Build short-horizon forecasts with
+rolling-origin evaluation. For extreme events, train parsimonious
+classifiers. Evaluate with RMSE/MAE.
+
+Visualization Deliverables. Standardized map suite like levels and
+anomalies, seasonal and calendar plots, correlation and diagnostics,
+coefficient and marginal-effect displays, forecast fan charts and
+rolling-error summaries.
+
+\subsubsection{\texorpdfstring{\textbf{Coding
+Challenges}}{Coding Challenges}}\label{coding-challenges}
+
+\subsubsection{\texorpdfstring{\textbf{Planned
+Timeline}}{Planned Timeline}}\label{planned-timeline}
+
+Phase I --- Introduction \& Framing (Early November) Goal: Establish the
+analytic scope and motivation for a five‑year, New York State--focused
+climate analysis.\\
+Deliverables: Background paragraphs, research questions, simple analysis
+flow schematic.
+
+Phase II --- Data Cleaning \& Harmonization (Early to Mid‑November)
+Goal: Acquire and standardize public meteorological data; produce a
+single analysis‑ready table keyed to geographic identifiers.
+Deliverables: Cleaned dataset, data‑quality summary
+(coverage/missingness), brief data dictionary.
+
+Phase III --- Exploratory Analysis \& Visualization (Mid to Late
+November) Goal: Describe spatial and temporal patterns in temperature,
+precipitation, and wind speed to inform modeling.\\
+Deliverables: EDA portfolio (maps, heatmaps, seasonal plots) with short
+captions.
+
+Phase IV --- Statistical \& Predictive Modeling (Late November to Early
+December) Goal: Fit an interpretable regression for associations and a
+short‑horizon forecaster with uncertainty quantification.\\
+Deliverables: Model summary with diagnostics, forecast error or coverage
+summary, brief limitations note.
+
+Phase V --- Results, Discussion \& Integration (Early to Mid‑December)
+Goal: Synthesize evidence into a coherent narrative with implications
+for monitoring and resilience.\\
+Deliverables: Finalized figures, completed Results \& Discussion,
+compiled PDF + GitHub document.
+
+\subsubsection{\texorpdfstring{\textbf{Project
+Structure}}{Project Structure}}\label{project-structure}
+
+\end{document}
