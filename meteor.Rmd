@@ -7,7 +7,7 @@ output:
 
 ---
 
-### **Group Numbers**
+### **Group Members**
 Jingtong He(jh4977), Chuyuan Xu(cx2347), Anqi Li(al4771), Xiwei Fu(xf2290), Kaicheng Mo(km4071)
 
 ### **Tentative Project Title**

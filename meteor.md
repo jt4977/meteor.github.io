@@ -3,7 +3,7 @@ Proposal
 al4771, cx2347, jh4977, km4071, xf2290
 2025-11-05
 
-### **Group Numbers**
+### **Group Members**
 
 Jingtong He(jh4977), Chuyuan Xu(cx2347), Anqi Li(al4771), Xiwei
 Fu(xf2290), Kaicheng Mo(km4071)
