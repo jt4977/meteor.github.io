@@ -10,6 +10,7 @@ output:
 Jingtong He(jh4977), Chuyuan Xu(cx2347), Anqi Li(al4771), Xiwei Fu(xf2290), Kaicheng Mo(km4071)
 
 ### **Tentative Project Title**
+ClimaScope: Forecasting the Empire Skies
 
 ### **Motivation**
 In recent years, the impacts of climate variability and extreme weather events have become increasingly evident across New York State. Understanding local climatic patterns is essential not only for environmental monitoring, but also for informing public health preparedness, agricultural planning, and infrastructure resilience. Despite the availability of rich meteorological datasets, there remains a need for integrated analytical approaches that combine visualization, statistical modeling, and predictive analysis to uncover underlying patterns and trends in regional climate behavior.
@@ -46,6 +47,10 @@ Key variables in `tl_2020_state` are:\
 &nbsp;&nbsp;&nbsp; `NAME`: Current county name.\
 
 ### **Intended Final Products**
+**Interactive Visualizations** showing spatial and temporal patterns of temperature, precipitation, and wind speed across New York counties from 2016–2020.\
+**Cleaned and Integrated Dataset** with detailed data dictionary and quality summary.\
+**Modeling and Forecasting Results** including regression analyses, mixed-effects models, and short-horizon time-series forecasts with evaluation metrics.\
+**Final Report and GitHub Repository** containing reproducible code, documentation, and all figures for transparent analysis.\
 
 ### **Anticipated Data Sources**
 The meteorology datasets were downloaded from ["Daily meteorological Gridmet variables by United States administrative boundaries", Harvard Dataverse](https://doi.org/10.7910/DVN/FYTME3). To monitor the changing patterns in the past seasons and years, meteorological data from 2016 to 2020 on the county level.\
@@ -66,6 +71,7 @@ Visualization Deliverables.
 Standardized map suite like levels and anomalies, seasonal and calendar plots, correlation and diagnostics, coefficient and marginal-effect displays, forecast fan charts and rolling-error summaries.
 
 ### **Coding Challenges**
+Throughout the project, we anticipate several coding challenges, including integrating multiple large meteorological datasets from different sources, managing spatial data for county-level mapping, and harmonizing geographic identifiers across files. Implementing regression and mixed-effects models in R while maintaining computational efficiency will require careful coding. Ensuring reproducibility and clarity through organized, well-documented scripts will also be a key focus throughout the analysis process.
 
 ### **Planned Timeline**
 Phase I — Introduction & Framing (Early November)
@@ -89,7 +95,20 @@ Goal: Synthesize evidence into a coherent narrative with implications for monito
 Deliverables: Finalized figures, completed Results & Discussion, compiled PDF + GitHub document.  
 
 ### **Project Structure**
+**Introduction:**\
+Background on climate variability and its growing impacts across New York State, emphasizing the importance of data-driven analysis for understanding local weather patterns and supporting climate preparedness.
 
+**Data Cleaning:**\
+Description of the acquisition of five years of meteorological data from publicly available sources. Data processing steps include handling missing values, standardizing measurements, and merging datasets by geographic identifiers.
+
+**Exploratory Analysis and Visualization:**\
+Initial data exploration through descriptive statistics and interactive visualizations. Spatial and temporal trends in temperature, precipitation, and wind speed are illustrated using maps, heatmaps, and seasonal plots.
+
+**Statistical and Predictive Modeling:**\
+Application of regression models to identify associations between meteorological and geographic variables, and implementation of time-series forecasting methods to project short-term climatic trends.
+
+**Results and Discussion:**\
+Summary of key analytical findings, interpretation of relationships among variables, and discussion of implication for environmental monitoring, infrastructure planning, and regional resilience.
 
 
 
