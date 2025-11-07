@@ -1,9 +1,7 @@
-meteor
+Proposal
 ================
-jh4977
+al4771, cx2347, jh4977, km4071, xf2290
 2025-11-05
-
-# **Proposal**
 
 ### **Group Numbers**
 
@@ -41,9 +39,55 @@ visualization, regression modeling, and time-series forecasting.
 
 ### **Variable Introduction**
 
+In the meteorology datasets from 2016-2020, each dataset includes the
+following variables:  
+   `county`: Federal Information Processing Series (FIPS), the id of the
+counties;  
+   `date`: date of the estimated meteorological variables;  
+   `sph`: near-surface specific humidity (Mass fraction);  
+   `vpd`: mean vapor pressure deficit (kPa);  
+   `tmmn`: minimum near-surface air temperature (Kelvin);  
+   `tmmx`: maximum near-surface air temperature (Kelvin);  
+   `pr`: precipitation (mm, daily total);  
+   `rmin`: minimum near-surface relative humidity (%);  
+   `rmax`: maximum near-surface relative humidity (%);  
+   `srad`: surface downwelling solar radiation (W/m^2);  
+   `vs`: wind speed at 10m (m/s);  
+   `th`: wind direction at 10m (degree).  
+  
+Key variables in `tl_2024_county` are:  
+    `GEOID`: Current county identifier; a concatenation of current state
+FIPS code and county FIPS code;  
+    `STUSPS`: Current United States Postal Service (USPS) state
+abbreviation;  
+    `NAME`: Current state name;  
+    `NAMELSAD`: Current name and the translated LSAD code for county;  
+    `geometry`: the geological boundaries in the geometry of
+multipolygon.  
+  
+Key variables in `tl_2020_state` are:  
+    `STATEFP`: State FIPS code;  
+    `STUSPS`: Current United States Postal Service (USPS) state
+abbreviation;  
+    `NAME`: Current county name.  
+
 ### **Intended Final Products**
 
 ### **Anticipated Data Sources**
+
+The meteorology datasets were downloaded from [“Daily meteorological
+Gridmet variables by United States administrative boundaries”, Harvard
+Dataverse](https://doi.org/10.7910/DVN/FYTME3). To monitor the changing
+patterns in the past seasons and years, meteorological data from 2016 to
+2020 on the county level.  
+  
+Corresponding county information was downloaded from [tiger/line
+Shapefiles](https://www.census.gov/cgi-bin/geo/shapefiles/index.php).
+Due to the lapse in federal funding, portions of the [United States
+Census Bureau](https://www.census.gov/) were unavailable.
+`tl_2020_state` and `tl_2024_county` were downloaded to obtain
+additional New York state and county information to facilitate further
+visualizations and analysis.  
 
 ### **Planned Analyses/ Visualizations**
 
