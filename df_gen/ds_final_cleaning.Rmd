@@ -12,9 +12,11 @@ library(tidyverse)
 library(stringr)
 library(arrow)
 library(sf)
+library(viridis)
+library(mapview)
 
 import = "/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project/data";
-output = "/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project"
+output = "/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project/df_gen/data"
 ```
 
 ### import the county and state data
@@ -79,17 +81,45 @@ meteor_16to20_sf |>
   summarise(
     avg_pr = mean(pr)
   ) |>
-  
   ggplot() +
   geom_sf(aes(fill = avg_pr))
 ```
 
 I think it works?
 
+```{r}
+avg_tmmx =  meteor_16to20 |>
+  group_by(fips) |>
+  summarise(
+    avg_tmmx = mean(tmmx) - 273.15
+  ) |>
+  mutate(
+    avg_tmmx = round(avg_tmmx, 3)
+  ) |>
+  left_join(county_ny, join_by(fips)) |>
+  st_as_sf()
+  
+  ggplot(avg_tmmx) +
+  geom_sf(aes(fill = avg_tmmx), color = NA) +
+  scale_fill_viridis_c(
+    name = "Mean T_max (°C)",
+    option = "plasma",
+    na.value = "grey90"
+  ) +
+  labs(
+    title = "2016–2020 mean daily maximum temperature by county",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal()
+  
+mapview(avg_tmmx, zcol = "avg_tmmx")
+```
+
 ### output tht data
 
 ```{r, eval = FALSE}
-dsn_meteor = str_c(output, "/meteor_2016to20_NY state.csv")
+dsn_meteor = str_c(output, "/meteor_2016to20_NY.csv")
 
 write_csv(
   meteor_16to20,
@@ -98,7 +128,7 @@ write_csv(
   append = FALSE
 )
 
-dsn_geo = str_c(output, "/NY county_fips")
+dsn_geo = str_c(output, "/NYcounty_fips")
 
 st_write(
   county_ny,
@@ -112,7 +142,5 @@ st_write(
 ### Check
 ```{r}
 file_check = read_csv(
-  '/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project/meteor_2016to20_NY state.csv', n_max = 20)
-
+  '/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project/df_gen/data/meteor_2016to20_NY.csv', n_max = 20)
 ```
-
