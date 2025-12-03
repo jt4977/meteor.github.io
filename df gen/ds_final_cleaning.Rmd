@@ -46,23 +46,26 @@ fips_ny = county_ny |>
 meteor_path = str_c(import, "/meteorology")
 meteor_files = list.files(meteor_path)
 
-meteor_1620 = read_parquet(str_c(meteor_path, '/', meteor_files[1])) |>
+meteor_16to20 = read_parquet(str_c(meteor_path, '/', meteor_files[1])) |>
   janitor::clean_names()
 
 for (i in 2:length(meteor_files)){
   meteor_temp = read_parquet(str_c(meteor_path, '/', meteor_files[i])) |>
     janitor::clean_names()
   
-  meteor_1620 = bind_rows(meteor_temp, meteor_1620)
+  meteor_16to20 = bind_rows(meteor_temp, meteor_16to20)
 }
 
-meteor_1620 = meteor_1620 |>
+meteor_16to20 = meteor_16to20 |>
   filter(county %in% fips_ny) |>
   mutate(
     fips = county
-  ) 
+  ) |>
+  select(county, fips, date, everything()) |>
+  arrange(county, fips, date)
 
-meteor_1620_sf = meteor_1620 |>
+# still too large (more than 50mb)
+meteor_16to20_sf = meteor_16to20 |>
   left_join(county_ny, by = "fips") |>
   st_as_sf()
 ```
@@ -70,7 +73,7 @@ meteor_1620_sf = meteor_1620 |>
 ### try some visualization to test the dataset
 
 ```{r}
-meteor_1620_sf |>
+meteor_16to20_sf |>
   filter(year(date) == 2020) |>
   group_by(fips) |>
   summarise(
@@ -86,12 +89,13 @@ I think it works?
 ### output tht data
 
 ```{r, eval = FALSE}
-dsn_meteor = str_c(output, "/meteor_2016-2020_NY state.csv")
+dsn_meteor = str_c(output, "/meteor_2016to20_NY state.csv")
 
 write_csv(
-  meteor_1620,
+  meteor_16to20,
   dsn_meteor,
-  na = "NA"
+  na = "NA",
+  append = FALSE
 )
 
 dsn_geo = str_c(output, "/NY county_fips")
@@ -100,34 +104,15 @@ st_write(
   county_ny,
   dsn_geo,
   driver = "ESRI Shapefile",
-  append = F
+  append = FALSE
 )
+
 ```
 
+### Check
+```{r}
+file_check = read_csv(
+  '/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project/meteor_2016to20_NY state.csv', n_max = 20)
 
-### **Raw Dataset Variable Introduction**
-In the meteorology datasets from 2016-2020, each dataset includes the following variables:\
-&nbsp;&nbsp;&nbsp;`county`: Federal Information Processing Series (FIPS), the id of the counties;\
-&nbsp;&nbsp;&nbsp;`date`: date of the estimated meteorological variables;\
-&nbsp;&nbsp;&nbsp;`sph`: near-surface specific humidity (Mass fraction);\
-&nbsp;&nbsp;&nbsp;`vpd`: mean vapor pressure deficit (kPa);\
-&nbsp;&nbsp;&nbsp;`tmmn`: minimum near-surface air temperature (Kelvin);\
-&nbsp;&nbsp;&nbsp;`tmmx`: maximum near-surface air temperature (Kelvin);\
-&nbsp;&nbsp;&nbsp;`pr`: precipitation (mm, daily total);\
-&nbsp;&nbsp;&nbsp;`rmin`: minimum near-surface relative humidity (%);\
-&nbsp;&nbsp;&nbsp;`rmax`: maximum near-surface relative humidity (%);\
-&nbsp;&nbsp;&nbsp;`srad`: surface downwelling solar radiation (W/m^2);\
-&nbsp;&nbsp;&nbsp;`vs`: wind speed at 10m (m/s);\
-&nbsp;&nbsp;&nbsp;`th`: wind direction at 10m (degree).\
-\
-Key variables in `tl_2024_county` are:\
-&nbsp;&nbsp;&nbsp; `GEOID`: Current county identifier; a concatenation of current state FIPS code and county FIPS code;\
-&nbsp;&nbsp;&nbsp; `STUSPS`: Current United States Postal Service (USPS) state abbreviation;\
-&nbsp;&nbsp;&nbsp; `NAME`: Current state name;\
-&nbsp;&nbsp;&nbsp; `NAMELSAD`: Current name and the translated LSAD code for county;\
-&nbsp;&nbsp;&nbsp; `geometry`: the geological boundaries in the geometry of multipolygon.\
-\
-Key variables in `tl_2020_state` are:\
-&nbsp;&nbsp;&nbsp; `STATEFP`: State FIPS code;\
-&nbsp;&nbsp;&nbsp; `STUSPS`: Current United States Postal Service (USPS) state abbreviation;\
-&nbsp;&nbsp;&nbsp; `NAME`: Current county name.\
+```
+
