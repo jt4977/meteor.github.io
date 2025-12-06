@@ -138,9 +138,3 @@ st_write(
 )
 
 ```
-
-### Check
-```{r}
-file_check = read_csv(
-  '/Users/chuyuanxu/Desktop/Columbia/25_fall/BIST8105_DS I/final project/df_gen/data/meteor_2016to20_NY.csv', n_max = 20)
-```
