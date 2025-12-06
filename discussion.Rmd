@@ -1,0 +1,21 @@
+---
+title: "Discussion"
+author: "Jingtong He, Xiwei Fu"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Discussion
+
+This unsupervised analysis shows that New York counties naturally group into two interpretable climate types based on long-term averages of temperature, humidity, precipitation, solar radiation, and wind speed. One cluster corresponds to warmer, sunnier and relatively drier counties, while the other represents cooler, more humid counties with lower solar radiation. The same pattern appears in the summaries, the PCA plot, and the map, and matches the expected coastal–inland contrast (downstate/NYC and Long Island vs upstate interior), suggesting that the clusters capture a real and useful climate gradient rather than a purely algorithmic artifact.
+
+The forecasting analysis evaluates two contrasting modeling strategies, ARIMAX with Fourier terms and XGBoost, using statewide aggregated meteorological time series. Because the forecasting models are trained on the overall New York state average rather than cluster-specific series, they do not incorporate spatial heterogeneity identified in the clustering analysis. The ARIMAX model explicitly captures seasonality and is highly interpretable, but it tends to smooth short-term variability and struggles with nonlinear interactions among predictors. In contrast, XGBoost is better able to learn nonlinear and lagged relationships, producing higher predictive accuracy and more adaptive short-term dynamics, though at the expense of interpretability.
+
+# Limitations
+
+This work has several limitations. Collapsing 2016–2020 daily data into simple long-term means makes the clusters easy to interpret but discards seasonality, year-to-year variability, and extreme events. The choice of k = 2, while supported by diagnostics, is only one possible resolution and yields unbalanced cluster sizes. Furthermore, the clustering is purely unsupervised and does not incorporate socioeconomic or health outcomes, so the resulting groups should be interpreted as descriptive climate patterns rather than causal risk categories.
+
+The forecasting models also have notable limitations. First, because both ARIMAX and XGBoost were trained on statewide averages, they ignore the meaningful spatial differences revealed by the clustering; temperature dynamics may differ substantially across regions, and a single aggregated model cannot capture these local variations. ARIMAX may leave residual autocorrelation and fails to address nonlinear temperature–meteorology interactions, while XGBoost relies heavily on feature engineering and accumulates error during multi-step forecasting. Neither approach explicitly incorporates long-term climate trends or external drivers. Future extensions could include cluster-specific or spatially varying models, hybrid approaches, or the integration of broader climate indicators to improve robustness and capture regional heterogeneity.

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xiwei Fu" />
+
+<meta name="date" content="2025-12-06" />
+
+<title>Prediction Models</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CLIMASCOPE</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="meteor.html">Proposal</a>
+</li>
+<li>
+  <a href="Introduction.html">Introduction</a>
+</li>
+<li>
+  <a href="data.html">Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="EDA.html">Main Predictors</a>
+    </li>
+    <li>
+      <a href="https://xucy2347.shinyapps.io/NYmeteor_dashboard/">Data Presentation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cluster.html">K-means clustering and PCA</a>
+    </li>
+    <li>
+      <a href="prediction.html">Prediction</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="discussion.html">Discussion</a>
+</li>
+<li>
+  <a href="report.html">Report</a>
+</li>
+<li>
+  <a href="screencast.html">
+    <span class="fa fa-play-circle"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/jt4977/meteor.github.io.git">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Prediction Models</h1>
+<h4 class="author">Xiwei Fu</h4>
+<h4 class="date">2025-12-06</h4>
+
+</div>
+
+
+<div id="model-1" class="section level1">
+<h1>Model 1</h1>
+<div id="data-preparation" class="section level2">
+<h2>Data preparation</h2>
+<p>In this section we aggregate station‐level meteorological data to the
+New York State level and create lagged covariates that will be used as
+external regressors in the ARIMAX model.</p>
+</div>
+<div id="arimax-fourier-model" class="section level2">
+<h2>ARIMAX + Fourier model</h2>
+<p>To represent strong annual seasonality, we use Fourier terms instead
+of a seasonal ARIMA structure. These Fourier harmonics, together with
+lagged meteorological covariates, enter the model as external
+regressors, while the error term follows a non-seasonal ARIMA process
+selected by auto.arima().</p>
+<table>
+<caption>Overall fit statistics for the ARIMAX + Fourier model</caption>
+<thead>
+<tr class="header">
+<th align="left">Metric</th>
+<th align="right">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Log-Likelihood</td>
+<td align="right">-4819.6440</td>
+</tr>
+<tr class="even">
+<td align="left">Sigma^2</td>
+<td align="right">11.5696</td>
+</tr>
+<tr class="odd">
+<td align="left">AIC</td>
+<td align="right">9669.2880</td>
+</tr>
+<tr class="even">
+<td align="left">AICc</td>
+<td align="right">9669.5532</td>
+</tr>
+<tr class="odd">
+<td align="left">BIC</td>
+<td align="right">9751.9363</td>
+</tr>
+</tbody>
+</table>
+<p>In this specification, the ARIMA component captures short-term
+temporal dependence, while Fourier terms describe the smooth annual
+cycle. Lagged humidity, vapor-pressure deficit, solar radiation, and
+wind speed account for additional meteorological drivers of
+temperature.</p>
+</div>
+<div id="coefficient-summary" class="section level2">
+<h2>Coefficient summary</h2>
+<p>We present the estimated coefficients and standard errors for the AR
+terms, meteorological covariates, and Fourier harmonics.</p>
+<table>
+<caption>Coefficient estimates for ARIMAX + Fourier model</caption>
+<thead>
+<tr class="header">
+<th align="left">Term</th>
+<th align="right">Estimate</th>
+<th align="right">SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ar1</td>
+<td align="right">0.7726</td>
+<td align="right">0.0410</td>
+</tr>
+<tr class="even">
+<td align="left">ar2</td>
+<td align="right">-0.2497</td>
+<td align="right">0.0375</td>
+</tr>
+<tr class="odd">
+<td align="left">ar3</td>
+<td align="right">0.1078</td>
+<td align="right">0.0241</td>
+</tr>
+<tr class="even">
+<td align="left">intercept</td>
+<td align="right">16.4607</td>
+<td align="right">0.9516</td>
+</tr>
+<tr class="odd">
+<td align="left">S1-365</td>
+<td align="right">-4.5286</td>
+<td align="right">0.3896</td>
+</tr>
+<tr class="even">
+<td align="left">C1-365</td>
+<td align="right">-12.3698</td>
+<td align="right">0.7226</td>
+</tr>
+<tr class="odd">
+<td align="left">S2-365</td>
+<td align="right">0.5384</td>
+<td align="right">0.3231</td>
+</tr>
+<tr class="even">
+<td align="left">C2-365</td>
+<td align="right">-0.4380</td>
+<td align="right">0.3095</td>
+</tr>
+<tr class="odd">
+<td align="left">S3-365</td>
+<td align="right">0.5627</td>
+<td align="right">0.3020</td>
+</tr>
+<tr class="even">
+<td align="left">C3-365</td>
+<td align="right">-0.3102</td>
+<td align="right">0.3016</td>
+</tr>
+<tr class="odd">
+<td align="left">sph_lag1</td>
+<td align="right">-47.3621</td>
+<td align="right">101.2503</td>
+</tr>
+<tr class="even">
+<td align="left">vpd_lag1</td>
+<td align="right">0.1925</td>
+<td align="right">0.5844</td>
+</tr>
+<tr class="odd">
+<td align="left">srad_lag1</td>
+<td align="right">0.0015</td>
+<td align="right">0.0023</td>
+</tr>
+<tr class="even">
+<td align="left">vs_lag1</td>
+<td align="right">-0.4976</td>
+<td align="right">0.0547</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="model-diagnostics" class="section level2">
+<h2>Model Diagnostics</h2>
+<p>We assess model adequacy by examining residuals. Ideally, residuals
+should behave like uncorrelated noise with no systematic temporal
+pattern.</p>
+<p><img src="prediction_files/figure-html/ljung-table-1.png" width="672" /></p>
+<table>
+<caption>Ljung–Box Test for ARIMAX + Fourier Residuals</caption>
+<thead>
+<tr class="header">
+<th align="right">Statistic</th>
+<th align="right">Degrees.of.freedom</th>
+<th align="right">P.value</th>
+<th align="right">Model.df</th>
+<th align="right">Total.lags.used</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">330.1</td>
+<td align="right">362</td>
+<td align="right">0.8844</td>
+<td align="right">3</td>
+<td align="right">365</td>
+</tr>
+</tbody>
+</table>
+<p>The residual time series shows no obvious structure, the
+autocorrelation function remains within the 95% bounds at most lags, and
+the Ljung–Box test is non-significant. Together, these diagnostics
+suggest that the ARIMAX + Fourier model has captured most of the
+temporal dependence and seasonal pattern in the data, and the remaining
+residuals are approximately white noise.</p>
+</div>
+<div id="forecasting-and-interpretation" class="section level2">
+<h2>Forecasting and Interpretation</h2>
+<p>We generate multi-step-ahead forecasts using the fitted ARIMAX +
+Fourier model. Future Fourier terms are constructed analytically, and
+recent lagged covariates are used to build the regressor matrix for the
+forecast horizon.</p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The figure presents a two-year forecast of daily maximum temperature
+derived from an ARIMAX model augmented with Fourier seasonal terms. The
+historical portion of the time series (black) exhibits strong annual
+cycles and substantial short-term variability, both of which are
+captured by the model. The forecasted values (blue) follow a smooth,
+periodic pattern consistent with the dominant seasonal structure. The
+incorporation of Fourier harmonics allows the model to represent complex
+seasonal behavior more flexibly than classical seasonal ARIMA, resulting
+in coherent long-range forecasts that align with the historical
+climatological patterns.</p>
+</div>
+</div>
+<div id="model-2" class="section level1">
+<h1>Model 2</h1>
+<div id="data-preparation-1" class="section level2">
+<h2>Data Preparation</h2>
+<p>Daily statewide averages for all available meteorological variables
+were computed. Feature engineering included lag terms, rolling means,
+and time-based indicators (day of year, weekday, year), which help
+XGBoost capture temporal dependencies and short-term memory effects.</p>
+</div>
+<div id="xgboost-model" class="section level2">
+<h2>XGBoost Model</h2>
+<p>The dataset was split chronologically (80% training, 20% testing). An
+XGBoost regression model was trained using RMSE as the optimization
+metric and early stopping to prevent overfitting.</p>
+<table>
+<caption>XGBoost Model Performance (Test Set)</caption>
+<thead>
+<tr class="header">
+<th align="left">Metric</th>
+<th align="right">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">RMSE</td>
+<td align="right">0.592</td>
+</tr>
+<tr class="even">
+<td align="left">MAE</td>
+<td align="right">0.438</td>
+</tr>
+<tr class="odd">
+<td align="left">MAPE (%)</td>
+<td align="right">119.793</td>
+</tr>
+<tr class="even">
+<td align="left">R²</td>
+<td align="right">0.997</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="model-diagnostics-1" class="section level2">
+<h2>Model Diagnostics</h2>
+<p>Residual analysis evaluates whether the model captures structure
+adequately and whether remaining errors behave randomly.</p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The XGBoost model demonstrates strong predictive performance, with
+predicted values closely tracking observed temperatures across the test
+period. Residuals are centered around zero with no visible temporal
+patterns, and the ACF shows no meaningful autocorrelation, indicating
+well-behaved errors. The predicted-versus-observed scatterplot aligns
+tightly around the 45-degree line, and the residual distribution is
+approximately normal with small variance. Overall, the diagnostics
+suggest that XGBoost effectively captures the nonlinear and seasonal
+structure of the temperature series and produces accurate, unbiased
+predictions.</p>
+</div>
+<div id="forecasting-and-interpretation-1" class="section level2">
+<h2>Forecasting and Interpretation</h2>
+<p>Future meteorological covariates were constructed by cycling the most
+recent 365-day pattern, enabling the model to simulate realistic
+seasonal dynamics.</p>
+<p><img src="prediction_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>This XGBoost model effectively captures nonlinear meteorological and
+temporal dependencies, delivering strong short-term predictive accuracy
+and stable long-horizon forecasts. The model serves as a complementary
+alternative to ARIMAX, offering improved flexibility in handling lagged
+covariates and complex interactions.</p>
+</div>
+</div>
+<div id="model-comparison" class="section level1">
+<h1>Model Comparison</h1>
+<table>
+<caption>Performance comparison of ARIMAX + Fourier vs XGBoost on the
+same test dates</caption>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="right">RMSE</th>
+<th align="right">MAE</th>
+<th align="right">MAPE</th>
+<th align="right">R2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ARIMAX + Fourier</td>
+<td align="right">8.593</td>
+<td align="right">7.608</td>
+<td align="right">1151.313</td>
+<td align="right">0.291</td>
+</tr>
+<tr class="even">
+<td align="left">XGBoost</td>
+<td align="right">0.592</td>
+<td align="right">0.438</td>
+<td align="right">119.793</td>
+<td align="right">0.997</td>
+</tr>
+</tbody>
+</table>
+<p>The test-set results show that XGBoost substantially outperforms the
+ARIMAX + Fourier model across all metrics, with far lower RMSE (0.57
+vs. 8.59), MAE (0.43 vs. 7.61), and MAPE (112% vs. 1151%), as well as a
+much higher R² (0.997 vs. 0.291). These differences are consistent with
+the theoretical design of the two models. The ARIMAX + Fourier approach
+relies on linear relationships, predefined seasonal components, and a
+limited set of lagged regressors; as a result, it struggles to capture
+nonlinear temperature dynamics and complex interactions among
+meteorological variables. In contrast, XGBoost is a gradient-boosted
+ensemble model capable of learning highly flexible, nonlinear
+relationships and automatically capturing interactions among features,
+including multiple lags, rolling averages, and time-of-year effects.
+This flexibility allows it to model temperature patterns far more
+accurately. However, ARIMAX has advantages in interpretability and
+classical time-series structure, while XGBoost, despite its higher
+accuracy, behaves more like a black box and requires more computational
+resources. Overall, the comparison suggests that XGBoost is markedly
+better suited for predictive performance in this dataset, especially
+when nonlinear and interaction effects are important.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -3,9 +3,9 @@ navbar:
   title: "CLIMASCOPE"
   right: 
     - text: "Proposal"
-      href: proposal.html
+      href: meteor.html    
     - text: "Introduction"
-      href: introduction.html
+      href: Introduction.html
     - text: "Data"
       href: data.html
     - text: "EDA"
@@ -13,11 +13,11 @@ navbar:
         - text: "Main Predictors"
           href: EDA.html
         - text: "Data Presentation"
-          href: "https://xucy2347.shinyapps.io/dashboard/"
+          href: https://xucy2347.shinyapps.io/NYmeteor_dashboard/
     - text: "Analysis"
       menu: 
         - text: "K-means clustering and PCA"
-          href: clustering.html
+          href: cluster.html
         - text: "Prediction"
           href: prediction.html
     - text: "Discussion"

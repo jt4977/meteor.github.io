@@ -1,0 +1,58 @@
+---
+title: "Introduction"
+author: "Jingtong, He, Kaicheng Mo"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Motivation
+
+New York State’s climate has already warmed substantially, with increases in mean and extreme temperatures and changes in precipitation documented over the twentieth and early twenty‑first centuries and projected to intensify under all plausible emissions scenarios (Lamie et al., 2024). These shifts amplify risks to human health, infrastructure and ecosystems, particularly through more frequent heat extremes, heavy rainfall and flooding, underscoring the need for decision‑relevant climate information at sub‑state scales (Barnes et al., 2024). While global classification schemes such as the Köppen–Geiger system provide a useful first‑order view of climate regimes, they do not resolve county‑level variation in multivariate weather conditions within a single state (Peel, Finlayson and McMahon, 2007). 
+
+
+# Data and Analytical Framework
+
+Using 2016–2020 daily county‑level meteorological observations, this project develops an integrated, three‑part statistical characterisation of New York’s near‑surface climate designed to support downstream impact analyses. 
+
+First, we aggregate daily variables to the state level to describe seasonal and inter‑annual variability in maximum temperature and related meteorological quantities. 
+
+Second, we construct county‑specific long‑term climate profiles—summaries of temperature, humidity, precipitation, solar radiation and wind speed—and apply principal component analysis (PCA) followed by k-means clustering to identify objectively defined climate types, following established multivariate climate regionalisation approaches that combine dimensionality reduction with unsupervised clustering. 
+
+Third, we treat statewide daily maximum temperature as a primary outcome and develop an ARIMAX model with Fourier seasonal terms and time‑lagged meteorological covariates (humidity, vapour‑pressure deficit, solar radiation and wind speed) to capture both the dominant annual cycle and shorter‑term weather dependencies, building on recommended practice for ARIMA‑family models with harmonic regressors in environmental time‑series forecasting (Hyndman and Athanasopoulos, 2018; Bazrafshan et al., 2025). 
+
+The overarching motivation is to obtain interpretable spatial climate types, a low‑dimensional representation of the main climate gradient across New York, and a calibrated forecasting model for daily heat at the state level, thereby generating meteorological inputs that can in future be coupled to health, infrastructure or ecological outcome models in support of climate‑resilient planning.
+
+
+# Initial Questions
+
+Our initial questions were designed to explore New York State’s multivariate climate patterns and guide the development of a meaningful statistical characterization.
+
+  -	How do seasonal and inter-annual variations in key meteorological variables manifest across New York State, and what broad climate signals can be observed at the state level?
+As we examined these trends, we began to consider whether certain variables contributed disproportionately to statewide variability and whether long-term warming patterns might shift these signals over time.
+
+  -	To what extent do counties differ in their long-term climate profiles, and can unsupervised methods such as PCA and k-means clustering reveal distinct, objectively defined climate types?
+The PCA results prompted new questions about the stability of the extracted gradients, the robustness of clusters to alternative variable selections or scaling choices, and whether the identified climate types could meaningfully support downstream applications such as health or infrastructure risk modeling.
+
+  -	Can a time-series forecasting model effectively capture both the dominant annual temperature cycle and shorter-term weather dependencies?
+  
+As we refined the model, additional questions arose regarding the sensitivity of forecasts to lag structures, the potential value of additional covariates, and how such forecasts might integrate with the county-level climate classifications.
+
+
+# Reference
+
+Barnes, J., Sheffield, P., Graber, N., Jessel, S., Lanza, K., Limaye, V. S., Morrow, F., Sauthoff, A., Schmeltz, M. and Smith, S. (2024) ‘Chapter 7: Human health and safety’, in Stevens, A. (ed.) New York State Climate Impacts Assessment[Interim version for public release]. Albany, NY: New York State Energy Research and Development Authority.
+
+Bazrafshan, O., Zamani, H., Farokhzadeh, B. and Caloiero, T. (2025) ‘A spectral analysis-driven SARIMAX framework with Fourier terms for monthly dust concentration forecasting’, Earth, 6(4), 123.
+
+Hyndman, R. J. and Athanasopoulos, G. (2018) Forecasting: Principles and Practice, 2nd edn. Melbourne: OTexts. Available at: https://otexts.com/fpp2/ (Accessed 6 December 2025).
+
+Lamie, C., Bader, D., Graziano, K., Horton, R., John, K., O’Hern, N. and Spungin, S. (2024) ‘Chapter 2: New York State’s changing climate’, in New York State Climate Impacts Assessment [Interim version for public release]. Albany, NY: New York State Energy Research and Development Authority.
+
+Peel, M. C., Finlayson, B. L. and McMahon, T. A. (2007) ‘Updated world map of the Köppen–Geiger climate classification’, Hydrology and Earth System Sciences, 11(5), pp. 1633–1644.
+
+
+
+

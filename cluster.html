@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jingtong He" />
+
+<meta name="date" content="2025-12-06" />
+
+<title>K-means clustering and PCA</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CLIMASCOPE</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="meteor.html">Proposal</a>
+</li>
+<li>
+  <a href="Introduction.html">Introduction</a>
+</li>
+<li>
+  <a href="data.html">Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="EDA.html">Main Predictors</a>
+    </li>
+    <li>
+      <a href="https://xucy2347.shinyapps.io/NYmeteor_dashboard/">Data Presentation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cluster.html">K-means clustering and PCA</a>
+    </li>
+    <li>
+      <a href="prediction.html">Prediction</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="discussion.html">Discussion</a>
+</li>
+<li>
+  <a href="report.html">Report</a>
+</li>
+<li>
+  <a href="screencast.html">
+    <span class="fa fa-play-circle"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/jt4977/meteor.github.io.git">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">K-means clustering and PCA</h1>
+<h4 class="author">Jingtong He</h4>
+<h4 class="date">2025-12-06</h4>
+
+</div>
+
+
+<pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+library(dplyr)
+library(lubridate)
+library(sf)
+library(tidyverse)
+library(factoextra)
+library(ggplot2)
+
+county_fips_df &lt;- st_read(&quot;df_gen/data/NYcounty_fips&quot;, quiet = TRUE)
+weather &lt;- read.csv(&quot;df_gen/data/meteor_2016to20_NY.csv&quot;)</code></pre>
+<div id="methodology" class="section level1">
+<h1>Methodology</h1>
+<div id="data-processing-and-feature-construction"
+class="section level2">
+<h2>Data Processing and Feature Construction</h2>
+<pre class="r"><code>weather2 &lt;- weather |&gt;
+mutate(
+tmmx_c = tmmx - 273.15,
+tmmn_c = tmmn - 273.15,
+year   = year(date),
+month  = month(date)
+)
+
+county_feat &lt;- weather2 |&gt;
+group_by(county) |&gt;
+summarise(
+mean_tmmx_c = mean(tmmx_c, na.rm = TRUE),
+mean_tmmn_c = mean(tmmn_c, na.rm = TRUE),
+mean_rmax   = mean(rmax,   na.rm = TRUE),
+mean_vpd    = mean(vpd,    na.rm = TRUE),
+mean_pr     = mean(pr,     na.rm = TRUE),
+mean_srad   = mean(srad,   na.rm = TRUE),
+mean_vs     = mean(vs,     na.rm = TRUE),
+.groups = &quot;drop&quot;
+)</code></pre>
+<p>We summarized daily meteorological records from 2016–2020 into
+county-level “climate profiles.” For each county, we computed long-term
+averages of maximum and minimum temperature, maximum relative humidity,
+vapor pressure deficit, precipitation, solar radiation, and wind speed.
+This aggregation yields one observation per county representing its
+typical climate over the study period.</p>
+</div>
+<div id="standardization" class="section level2">
+<h2>Standardization</h2>
+<pre class="r"><code>feat_mat &lt;- county_feat |&gt;
+select(-county) |&gt;
+scale() |&gt;
+as.matrix()</code></pre>
+<p>Before clustering, all continuous features were standardized to mean
+0 and unit variance so that no single variable dominated the distance
+calculations in k-means.</p>
+</div>
+</div>
+<div id="clustering-approach" class="section level1">
+<h1>Clustering Approach</h1>
+<div id="choice-of-the-number-of-clusters" class="section level2">
+<h2>Choice of the Number of Clusters</h2>
+<pre class="r"><code>set.seed(123)
+
+fviz_nbclust(feat_mat, kmeans, method = &quot;wss&quot;)</code></pre>
+<p><img src="cluster_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>fviz_nbclust(feat_mat, kmeans, method = &quot;silhouette&quot;)</code></pre>
+<p><img src="cluster_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p>We chose k=2 based on both the elbow and silhouette criteria. In the
+WSS (elbow) plot, the largest drop occurs between k=1 and k=2/3, and the
+curve flattens after k=2, indicating limited gain from additional
+clusters. The average silhouette width is highest at k=2, suggesting
+that two clusters provide the best separation and cohesion.</p>
+</div>
+<div id="k-means-clustering-results" class="section level2">
+<h2>K-means Clustering Results</h2>
+<pre class="r"><code>library(gt)
+
+cluster_table &lt;- cluster_summary |&gt;
+  mutate(
+    cluster = if_else(cluster == 1, &quot;Cluster 1&quot;, &quot;Cluster 2&quot;)
+  ) |&gt;
+  gt(rowname_col = &quot;cluster&quot;) |&gt;
+  tab_header(
+    title = md(&quot;**Climate characteristics by cluster**&quot;)
+  ) |&gt;
+  cols_label(
+    n_counties  = &quot;n&quot;,
+    mean_tmmx_c = &quot;Mean tmmx (°C)&quot;,
+    mean_tmmn_c = &quot;Mean tmmn (°C)&quot;,
+    mean_rmax   = &quot;Mean rmax (%)&quot;,
+    mean_vpd    = &quot;Mean VPD (kPa)&quot;,
+    mean_pr     = &quot;Mean precip (mm)&quot;,
+    mean_srad   = &quot;Mean srad (W/m²)&quot;,
+    mean_vs     = &quot;Mean wind (m/s)&quot;
+  ) |&gt;
+  fmt_number(
+    columns = c(mean_tmmx_c:mean_vs),
+    decimals = 2
+  ) |&gt;
+  tab_options(
+    table.font.size = px(14),
+    data_row.padding = px(4)
+  )
+
+cluster_table</code></pre>
+<div id="ynywchplyn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ynywchplyn table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ynywchplyn thead, #ynywchplyn tbody, #ynywchplyn tfoot, #ynywchplyn tr, #ynywchplyn td, #ynywchplyn th {
+  border-style: none;
+}
+
+#ynywchplyn p {
+  margin: 0;
+  padding: 0;
+}
+
+#ynywchplyn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ynywchplyn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ynywchplyn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ynywchplyn .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ynywchplyn .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ynywchplyn .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ynywchplyn .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ynywchplyn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ynywchplyn .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ynywchplyn .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ynywchplyn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ynywchplyn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ynywchplyn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ynywchplyn .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ynywchplyn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ynywchplyn .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ynywchplyn .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ynywchplyn .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ynywchplyn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ynywchplyn .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ynywchplyn .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ynywchplyn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ynywchplyn .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ynywchplyn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ynywchplyn .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ynywchplyn .gt_left {
+  text-align: left;
+}
+
+#ynywchplyn .gt_center {
+  text-align: center;
+}
+
+#ynywchplyn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ynywchplyn .gt_font_normal {
+  font-weight: normal;
+}
+
+#ynywchplyn .gt_font_bold {
+  font-weight: bold;
+}
+
+#ynywchplyn .gt_font_italic {
+  font-style: italic;
+}
+
+#ynywchplyn .gt_super {
+  font-size: 65%;
+}
+
+#ynywchplyn .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ynywchplyn .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ynywchplyn .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ynywchplyn .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ynywchplyn .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ynywchplyn .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ynywchplyn .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ynywchplyn .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ynywchplyn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="9" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Climate characteristics by cluster</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="a::stub"></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="n_counties">n</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_tmmx_c">Mean tmmx (°C)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_tmmn_c">Mean tmmn (°C)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_rmax">Mean rmax (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_vpd">Mean VPD (kPa)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_pr">Mean precip (mm)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_srad">Mean srad (W/m²)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mean_vs">Mean wind (m/s)</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><th id="stub_1_1" scope="row" class="gt_row gt_left gt_stub">Cluster 1</th>
+<td headers="stub_1_1 n_counties" class="gt_row gt_right">9</td>
+<td headers="stub_1_1 mean_tmmx_c" class="gt_row gt_right">17.02</td>
+<td headers="stub_1_1 mean_tmmn_c" class="gt_row gt_right">8.37</td>
+<td headers="stub_1_1 mean_rmax" class="gt_row gt_right">81.06</td>
+<td headers="stub_1_1 mean_vpd" class="gt_row gt_right">0.65</td>
+<td headers="stub_1_1 mean_pr" class="gt_row gt_right">3.49</td>
+<td headers="stub_1_1 mean_srad" class="gt_row gt_right">187.13</td>
+<td headers="stub_1_1 mean_vs" class="gt_row gt_right">4.88</td></tr>
+    <tr><th id="stub_1_2" scope="row" class="gt_row gt_left gt_stub">Cluster 2</th>
+<td headers="stub_1_2 n_counties" class="gt_row gt_right">53</td>
+<td headers="stub_1_2 mean_tmmx_c" class="gt_row gt_right">13.77</td>
+<td headers="stub_1_2 mean_tmmn_c" class="gt_row gt_right">3.00</td>
+<td headers="stub_1_2 mean_rmax" class="gt_row gt_right">89.54</td>
+<td headers="stub_1_2 mean_vpd" class="gt_row gt_right">0.48</td>
+<td headers="stub_1_2 mean_pr" class="gt_row gt_right">3.14</td>
+<td headers="stub_1_2 mean_srad" class="gt_row gt_right">168.02</td>
+<td headers="stub_1_2 mean_vs" class="gt_row gt_right">4.49</td></tr>
+  </tbody>
+  
+</table>
+</div>
+<p>We identified two clusters of New York counties based on their
+2016–2020 average meteorological profiles.</p>
+<p>Cluster 1 (n = 9) exhibits warmer and sunnier conditions, with higher
+mean daily maximum and minimum temperature (approximately 17.0°C and
+8.4°C) compared with Cluster 2 (13.8°C and 3.0°C).</p>
+<p>Cluster 1 also has lower maximum relative humidity and higher vapor
+pressure deficit, indicating relatively drier air, alongside slightly
+higher precipitation, stronger solar radiation, and higher wind
+speed.</p>
+<p>Cluster 2 (n = 53), which contains most counties, is characterized by
+cooler temperatures, higher humidity, lower solar radiation, and
+slightly weaker winds.</p>
+<p>Thus, Cluster 1 can be interpreted as a “warmer, sunnier, relatively
+drier” climate type, whereas Cluster 2 represents a “cooler, more humid”
+climate type.</p>
+</div>
+<div id="principal-component-analysis" class="section level2">
+<h2>Principal Component Analysis</h2>
+<p>From the perspective of these data, PCA is useful because there are
+many correlated climate features at the county level.</p>
+<p>Considering all seven variables separately makes it difficult to see
+the overall structure of the data or to understand how the k-means
+clusters differ in the multivariate space.</p>
+<p>PCA provides a set of uncorrelated components that summarize the main
+gradients of climate variation, allowing us to visualize the data in
+only two dimensions.</p>
+<p>We focus on PC1 and PC2 because they explain the largest share of
+total variance and therefore capture the most important patterns in the
+climate features.</p>
+<p>PC1 (horizontal axis) represents the primary gradient of climate
+variation. Counties in Cluster 1 and Cluster 2 fall on opposite sides,
+so PC1 separates warmer, sunnier, relatively drier counties from cooler,
+more humid counties.</p>
+<p>PC2 (vertical axis) captures additional variation not explained by
+PC1, such as smaller differences in humidity, precipitation, radiation,
+and wind speed, and helps show within-cluster heterogeneity.</p>
+</div>
+<div id="visualization-of-climate-based-clusters"
+class="section level2">
+<h2>Visualization of Climate-Based Clusters</h2>
+<p>After choosing k=2, we used three complementary plots to evaluate
+whether the clusters are meaningful and how they differ:</p>
+<ol style="list-style-type: decimal">
+<li><p>How do the original climate variables differ by cluster?</p></li>
+<li><p>Do the clusters separate well in the multivariate feature
+space?</p></li>
+<li><p>How are the clusters distributed geographically across New York
+State?</p></li>
+</ol>
+<div id="figure-1-distribution-of-climate-features-by-cluster"
+class="section level3">
+<h3>Figure 1: Distribution of Climate Features by Cluster</h3>
+<pre class="r"><code>plot_data &lt;- county_cluster |&gt;
+select(county, cluster, mean_tmmx_c:mean_vs) |&gt;
+pivot_longer(
+cols = -c(county, cluster),
+names_to = &quot;variable&quot;,
+values_to = &quot;value&quot;
+)
+
+ggplot(plot_data, aes(x = cluster, y = value, fill = cluster)) +
+geom_boxplot(alpha = 0.7) +
+facet_wrap(~ variable, scales = &quot;free_y&quot;) +
+theme_bw() +
+labs(
+x = &quot;Cluster&quot;,
+y = &quot;Value&quot;,
+title = &quot;Distribution of climate features by cluster&quot;
+) +
+theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="cluster_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>The faceted boxplots show the distribution of each county-level
+climate feature by cluster.</p>
+<p>They highlight that Cluster 1 counties tend to have higher mean
+maximum and minimum temperatures, higher solar radiation and wind speed,
+slightly higher precipitation, lower maximum relative humidity, and
+higher vapor pressure deficit than Cluster 2, making the “warm, sunny,
+relatively dry” vs “cooler, more humid” contrast clear on the original
+scale of the variables.</p>
+</div>
+<div id="figure-2-pca-of-county-level-climate-features"
+class="section level3">
+<h3>Figure 2: PCA of County-Level Climate Features</h3>
+<pre class="r"><code>pca_fit &lt;- prcomp(feat_mat, center = FALSE, scale. = FALSE)
+
+pca_df &lt;- as.data.frame(pca_fit$x[, 1:2]) |&gt;
+mutate(
+county  = county_feat$county,
+cluster = county_cluster$cluster
+)
+
+ggplot(pca_df, aes(x = PC1, y = PC2, color = cluster)) +
+geom_point(size = 3) +
+theme_minimal() +
+labs(
+title = &quot;PCA of county-level climate features&quot;,
+x = &quot;PC1&quot;,
+y = &quot;PC2&quot;,
+color = &quot;Cluster&quot;
+)</code></pre>
+<p><img src="cluster_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The PCA plot projects all standardized features onto the first two
+principal components and colors points by cluster.</p>
+<p>Cluster 1 counties cluster together on one side of the PC1 axis,
+while Cluster 2 counties occupy a separate region, indicating that the
+two clusters are well separated in the reduced multivariate climate
+space.</p>
+</div>
+<div id="figure-3-spatial-distribution-of-climate-clusters"
+class="section level3">
+<h3>Figure 3: Spatial Distribution of Climate Clusters</h3>
+<pre class="r"><code>county_cluster2 &lt;- county_cluster |&gt;
+mutate(fips = as.character(county))
+
+ny_sf2 &lt;- county_fips_df |&gt;
+mutate(fips = as.character(fips))
+
+ny_map &lt;- ny_sf2 |&gt;
+left_join(county_cluster2, by = &quot;fips&quot;)
+
+ggplot(ny_map) +
+geom_sf(aes(fill = cluster), color = &quot;white&quot;, size = 0.2) +
+scale_fill_brewer(palette = &quot;Set2&quot;, name = &quot;Cluster&quot;) +
+theme_minimal() +
+labs(
+title = &quot;Climate-based clusters of New York counties (k = 2)&quot;
+)</code></pre>
+<p><img src="cluster_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>The choropleth map joins cluster labels to the county shapefile and
+shows that Cluster 1 counties are concentrated in the downstate/NYC and
+Long Island region, whereas most upstate and interior counties belong to
+Cluster 2.</p>
+<p>This confirms that the climate-based clusters also align with
+intuitive coastal vs inland geographic patterns.</p>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>Combining k-means clustering with PCA and spatial visualization
+demonstrates that New York counties can be grouped into two distinct
+climate types.</p>
+<p>The first cluster represents warmer, sunnier, relatively drier
+coastal counties, while the second cluster captures cooler, more humid
+interior counties.</p>
+<p>These patterns are consistent across the original climate features,
+the low-dimensional PCA representation, and the geographic
+distribution.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

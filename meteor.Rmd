@@ -1,54 +1,56 @@
 ---
 title: "Proposal"
-author: "al4771, cx2347, jh4977, km4071, xf2290"
+author: "Anqi Li, Chuyuan Xu, Jingtong He, Kaicheng Mo, Xiwei Fu"
 date: "2025-11-05"
 output:
-  github_document: default
+  html_document:
+    toc: true
+    toc_float: true
 
 ---
 
-### **Group Members**
+# Group Members
 Jingtong He(jh4977), Chuyuan Xu(cx2347), Anqi Li(al4771), Xiwei Fu(xf2290), Kaicheng Mo(km4071)
 
-### **Tentative Project Title**
+# Tentative Project Title
 ClimaScope: Forecasting the Empire Skies
 
-### **Motivation**
+# Motivation
 Climate variability and extreme weather increasingly affect New York State. Understanding local patterns is vital for public health, agriculture, and infrastructure. Using five years of weather data, this project visualizes and models temperature, precipitation, and wind speed to reveal key climatic drivers and support regional climate planning.
 
-### **Intended Final Products**
+# Intended Final Products
 **Interactive Visualizations** showing spatial and temporal patterns of temperature, precipitation, and wind speed across New York counties from 2016–2020.\
 **Cleaned and Integrated Dataset** with detailed data dictionary and quality summary.\
-**Modeling and Forecasting Results** including regression analyses, mixed-effects models, and short-horizon time-series forecasts with evaluation metrics.\
+**Modeling and Forecasting Results** including unsupervised climate clustering and statewide predictive models for daily maximum temperature (seasonal ARIMAX with Fourier terms and XGBoost), together with model comparison.\
 **Final Report and GitHub Repository** containing reproducible code, documentation, and all figures for transparent analysis.\
 
-### **Anticipated Data Sources**
+# Anticipated Data Sources
 The meteorology datasets were downloaded from **["Daily meteorological Gridmet variables by United States administrative boundaries", Harvard Dataverse]**(https://doi.org/10.7910/DVN/FYTME3). To monitor the changing patterns in the past seasons and years, meteorological data from 2016 to 2020 on the county level.\
 \
 Corresponding county information was downloaded from **[tiger/line Shapefiles]**(https://www.census.gov/cgi-bin/geo/shapefiles/index.php). Due to the lapse in federal funding, portions of the **[United States Census Bureau]**(https://www.census.gov/) were unavailable. `tl_2020_state` and `tl_2024_county` were downloaded to obtain additional New York state and county information to facilitate further visualizations and analysis.\
 
-### **Planned Analyses/ Visualizations**
+# Planned Analyses and Visualizations
 **Exploratory Data Analysis: **Visualize spatial and temporal patterns of temperature, precipitation, and wind speed using histograms, density plots, heatmaps, and county-level maps. Examine correlations and temporal dependencies among key variables.
 
-**Spatiotemporal Association Modeling: **Fit regression and mixed-effects models to assess associations between meteorological outcomes and geographic factors, using two-part models for precipitation where needed. Present results with coefficient plots and diagnostics.
+**: Time-Series and Predictive Modeling: ** Use daily statewide-averaged meteorological series to fit seasonal ARIMAX models with Fourier terms and XGBoost models for forecasting maximum temperature. Compare their performance using a common train–test split, residual diagnostics, and accuracy metrics, and discuss trade-offs between interpretability and predictive flexibility.
 
 **Visualization Deliverables: **Deliver interactive and static visualizations, including maps, seasonal plots, and correlation displays, summarizing key findings clearly and reproducibly.
 
-### **Coding Challenges**
-Key challenges include integrating large meteorological datasets, managing spatial data for county-level mapping, and aligning geographic identifiers. Implementing regression and mixed-effects models efficiently in R and ensuring reproducibility through clear, well-documented code will be essential.
+**Unsupervised Climate Clustering and PCA:** Use k-means clustering to identify distinct county-level climate types, selecting k=2 via elbow and silhouette diagnostics. Apply PCA to visualize cluster separation in a low-dimensional space and combine boxplots and county maps to summarize and interpret the resulting climate regimes.
 
-### **Planned Timeline**
+# Coding Challenges
+Key challenges include integrating large meteorological datasets, managing spatial data for county-level mapping, and aligning geographic identifiers. Implementing time-series models (ARIMAX + Fourier) and XGBoost efficiently in R and ensuring reproducibility through clear, well-documented code will be essential.
+
+# Planned Timeline
 **Nov 1–5:** Define project scope, motivation, and research questions.\
 **Nov 6–15:** Collect, clean, and merge meteorological data into an analysis-ready dataset.\
-**Nov 16–25:** Explore spatial and temporal climate patterns through descriptive statistics and visualizations.\
-**Nov 26–Dec 5:** Fit regression and mixed-effects models to identify key climatic associations.\
-**Dec 6–15:** Summarize findings, visualize results, and compile the final report and GitHub documentation.
+**Nov 16–23:** Explore spatial and temporal climate patterns through descriptive statistics and visualizations.\
+**Nov 24–Nov 30:** Fit regression and mixed-effects models to identify key climatic associations.\
+**Dec 1–6:** Summarize findings, visualize results, and compile the final report and GitHub documentation.
 
-### **Project Structure**
+# Project Structure
 **Introduction :**Present the motivation and significance of studying climate variability across New York State.\
 **Data Cleaning :**Compile and standardize five years of meteorological data, addressing missing values and ensuring consistency across counties.\
 **Exploratory Analysis and Visualization: **Examine spatial and temporal trends in temperature, precipitation, and wind speed using descriptive plots and maps.\
-**Statistical and Predictive Modeling: **Apply regression and mixed-effects models to assess associations between meteorological and geographic factors.\
+**Statistical and Predictive Modeling: ** Apply k-means clustering and PCA to define county-level climate regimes, and fit statewide ARIMAX + Fourier and XGBoost models to forecast daily maximum temperature.\
 **Results and Discussion: **Summarize major findings and their implications for climate monitoring, infrastructure, and regional resilience.
-
-

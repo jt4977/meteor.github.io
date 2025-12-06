@@ -1,5 +1,5 @@
 ---
-title: "NY-Meteorology-Data-Import"
+title: "Exploratory Data Analysis Main Predictors"
 author: "Kaicheng Mo"
 date: "`r Sys.Date()`"
 output:
@@ -8,6 +8,7 @@ output:
     toc_float: true
     code_folding: hide
 ---
+
 ## Overview
 
 This interface presents exploratory summaries of county‑level meteorological conditions in New York State for the period 2016–2020. The underlying dataset links daily observations to county polygons via the FIPS county identifier (`fips`) and calendar date (`date`). Maximum near‑surface air temperature (`tmmx`, recorded in Kelvin) is converted to degrees Celsius (`tmmx_C`) and used to calculate statewide daily means, the annual number of “hot” days above 30 °C, and multi‑year county averages. Daily total precipitation (`pr`, in millimetres) is grouped by meteorological season to characterise the distribution and frequency of wet days, while vapor pressure deficit (`vpd`, in kPa) is analysed jointly with temperature to illustrate how atmospheric dryness changes under different heat conditions. Derived temporal variables such as `month`, `season`, and `year` organise the data in time, and geographic coordinates of county centroids (`lon`, `lat`) support the interactive map. Together, these variables provide a compact description of how temperature, moisture, and heat extremes vary across space and time in New York State.
@@ -241,6 +242,6 @@ County polygons are shaded according to the multi‑year mean daily maximum temp
 
 # Supplement Materials
 ```{r results='asis'}
-cat("If you would like to explore additional variables in our dataset, please click [Data Presentation](https://xucy2347.shinyapps.io/dashboard/) to view more details.")
+cat("If you would like to explore additional variables in our dataset, please click [Data Presentation](https://xucy2347.shinyapps.io/NYmeteor_dashboard/) to view more details.")
 ```
 

@@ -1,0 +1,64 @@
+---
+title: "Data Summary"
+author: "Chuyuan XU"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include = FALSE}
+library(tidyverse)
+library(sf)
+```
+
+```{r, include = FALSE}
+meteor_r = read_csv("df_gen/data/meteor_2016to20_NY.csv")
+NYcounty = st_read("df_gen/data/NYcounty_fips/NYcounty_fips.shp")
+```
+
+# Dataset
+The datasets recording various meteorological variables were downloaded from **["Daily meteorological Gridmet variables by United States administrative boundaries", Harvard Dataverse](https://doi.org/10.7910/DVN/FYTME3)**. The dataset provides spatial aggregations of meteorological for US counties. To monitor the changing patterns in the past seasons and years, meteorological data from 2016 to 2020 on the county level were downloaded to get the closest observations available.\
+\
+Key meteorological factors used for visualization and addressing our research question are:\
+&nbsp;&nbsp;&nbsp;&nbsp;`county`: Federal Information Processing Series (FIPS), the id of the counties;\
+&nbsp;&nbsp;&nbsp;&nbsp;`date`: date of the estimated meteorological variables;\
+&nbsp;&nbsp;&nbsp;&nbsp;`sph`: near-surface specific humidity (Mass fraction);\
+&nbsp;&nbsp;&nbsp;&nbsp;`vpd`: mean vapor pressure deficit (kPa);\
+&nbsp;&nbsp;&nbsp;&nbsp;`tmmn`: minimum near-surface air temperature (Kelvin);\
+&nbsp;&nbsp;&nbsp;&nbsp;`tmmx`: maximum near-surface air temperature (Kelvin);\
+&nbsp;&nbsp;&nbsp;&nbsp;`pr`: precipitation (mm, daily total);\
+&nbsp;&nbsp;&nbsp;&nbsp;`rmin`: minimum near-surface relative humidity (%);\
+&nbsp;&nbsp;&nbsp;&nbsp;`rmax`: maximum near-surface relative humidity (%);\
+&nbsp;&nbsp;&nbsp;&nbsp;`srad`: surface downwelling solar radiation (W/m^2);\
+&nbsp;&nbsp;&nbsp;&nbsp;`vs`: wind speed at 10m (m/s);\
+&nbsp;&nbsp;&nbsp;&nbsp;`th`: wind direction at 10m (degree).\
+\
+Corresponding county information was downloaded from **[tiger/line Shapefiles](https://www.census.gov/cgi-bin/geo/shapefiles/index.php)**. Due to the lapse in federal funding, portions of the **[United States Census Bureau](https://www.census.gov/)** were unavailable. `tl_2020_state` and `tl_2024_county` were downloaded to obtain additional New York state and county information to facilitate visualizations and analysis.\
+Key variables in `tl_2024_county` include:\
+&nbsp;&nbsp;&nbsp;&nbsp;`GEOID`: Current county identifier; a concatenation of current state FIPS code and county FIPS code;\
+&nbsp;&nbsp;&nbsp;&nbsp;`STUSPS`: Current United States Postal Service (USPS) state abbreviation;\
+&nbsp;&nbsp;&nbsp;&nbsp;`NAME`: Current state name;\
+&nbsp;&nbsp;&nbsp;&nbsp;`NAMELSAD`: Current name and the translated LSAD code for county;\
+&nbsp;&nbsp;&nbsp;&nbsp;`geometry`: the geological boundaries in the geometry of multipolygon.\
+\
+Key variables in `tl_2020_state` are:\
+&nbsp;&nbsp;&nbsp;&nbsp;`STATEFP`: State FIPS code;\
+&nbsp;&nbsp;&nbsp;&nbsp;`STUSPS`: Current United States Postal Service (USPS) state abbreviation;\
+&nbsp;&nbsp;&nbsp;&nbsp;`NAME`: Current county name.\
+
+# Data Cleaning
+## Meteorological Factors dataset
+Due to the fact that each raw dataset exceeds the maximum upload file size (>50 MB), data cleaning was performed on a local drive. The tidied dataset is available on [our Github](https://github.com/jt4977/meteor.github.io/tree/main/df_gen).
+Meteorological datasets from 2016 to 2020 were combined, and only counties in the NY states would be selected for the new dataset. The new dataset has `r nrow(meteor_r)` observations, each with unique dates and FIPs code, and `r ncol(NYcounty)` variables with county information and meteorological factors. 
+In later analysis, minimum and maximum near-surface air temperatures were converted from Kelvin into Celsius.\
+\
+
+## NY County Information
+All the FIPs in the state of New York were first filtered out from the dataset on states, and county information was joined to serve as a supplement of county names and multiploygon geographical information. The new dataset now includes `r nrow(NYcounty)` unique NY counties and `r ncol(NYcounty)`. Data points are usually stored in the two sections above and merged when needed.
