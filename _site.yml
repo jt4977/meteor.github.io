@@ -1,0 +1,39 @@
+name: "climascope-site"
+navbar:
+  title: "CLIMASCOPE"
+  right: 
+    - text: "Proposal"
+      href: proposal.html
+    - text: "Introduction"
+      href: introduction.html
+    - text: "Data"
+      href: data.html
+    - text: "EDA"
+      menu: 
+        - text: "Main Predictors"
+          href: EDA.html
+        - text: "Data Presentation"
+          href: "https://xucy2347.shinyapps.io/dashboard/"
+    - text: "Analysis"
+      menu: 
+        - text: "K-means clustering and PCA"
+          href: clustering.html
+        - text: "Prediction"
+          href: prediction.html
+    - text: "Discussion"
+      href: discussion.html
+    - text: "Report"
+      href: report.html
+    - icon: fa-play-circle      
+      href: screencast.html
+      aria-label: "Screencast"      
+    - icon: fa-github       
+      href: "https://github.com/jt4977/meteor.github.io.git"
+      aria-label: "GitHub"
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    toc: false
+    
+output_dir: "."
