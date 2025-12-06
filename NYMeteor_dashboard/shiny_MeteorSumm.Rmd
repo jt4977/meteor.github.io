@@ -134,7 +134,10 @@ renderPlotly({
     ) +
     theme_minimal()
 
-  ggplotly(map, tooltip = "text") |> style(hoveron = "fills")
+  ggplotly(map, tooltip = "text") |>
+  style(
+    hoveron = "fills"
+  )
 })
 
 ```
@@ -220,10 +223,10 @@ renderPlotly({
 })
 ```
 
-```{r}
+```{r, include=FALSE}
 # library(rsconnect)
 # rsconnect::deployApp(
-#     appDir = ".",
+#     appDir = "../NYMeteor_dashboard",
 #     appName = "NYmeteor_dashboard"
 # )
 ```

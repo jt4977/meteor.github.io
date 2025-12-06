@@ -3,10 +3,10 @@ title: "Proposal"
 author: "Anqi Li, Chuyuan Xu, Jingtong He, Kaicheng Mo, Xiwei Fu"
 date: "2025-11-05"
 output:
-  html_document:
+  default: pdf_document
+  default: html_document:
     toc: true
     toc_float: true
-
 ---
 
 # Group Members
@@ -25,9 +25,9 @@ Climate variability and extreme weather increasingly affect New York State. Unde
 **Final Report and GitHub Repository** containing reproducible code, documentation, and all figures for transparent analysis.\
 
 # Anticipated Data Sources
-The meteorology datasets were downloaded from **["Daily meteorological Gridmet variables by United States administrative boundaries", Harvard Dataverse]**(https://doi.org/10.7910/DVN/FYTME3). To monitor the changing patterns in the past seasons and years, meteorological data from 2016 to 2020 on the county level.\
+The meteorology datasets were downloaded from **["Daily meteorological Gridmet variables by United States administrative boundaries", Harvard Dataverse](https://doi.org/10.7910/DVN/FYTME3)**. To monitor the changing patterns in the past seasons and years, meteorological data from 2016 to 2020 on the county level.\
 \
-Corresponding county information was downloaded from **[tiger/line Shapefiles]**(https://www.census.gov/cgi-bin/geo/shapefiles/index.php). Due to the lapse in federal funding, portions of the **[United States Census Bureau]**(https://www.census.gov/) were unavailable. `tl_2020_state` and `tl_2024_county` were downloaded to obtain additional New York state and county information to facilitate further visualizations and analysis.\
+Corresponding county information was downloaded from **[tiger/line Shapefiles](https://www.census.gov/cgi-bin/geo/shapefiles/index.php)**. Due to the lapse in federal funding, portions of the **[United States Census Bureau](https://www.census.gov/)** were unavailable. `tl_2020_state` and `tl_2024_county` were downloaded to obtain additional New York state and county information to facilitate further visualizations and analysis.\
 
 # Planned Analyses and Visualizations
 **Exploratory Data Analysis: **Visualize spatial and temporal patterns of temperature, precipitation, and wind speed using histograms, density plots, heatmaps, and county-level maps. Examine correlations and temporal dependencies among key variables.
