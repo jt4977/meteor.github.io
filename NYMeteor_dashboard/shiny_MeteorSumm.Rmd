@@ -1,0 +1,230 @@
+---
+title: "Meteorology Summary for NY State (2016 - 2020)"
+site: false
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+resource_files:
+  - data/NYcounty_fips/*
+  - data/meteor_2016to20_NY.csv
+---
+
+```{r setup}
+library(flexdashboard)
+library(plotly)
+library(sf)
+library(tidyverse)
+library(shiny)
+library(viridis)
+library(here)
+```
+
+```{r data import, message = FALSE}
+NYcounty_sf <- sf::read_sf("data/NYcounty_fips/NYcounty_fips.shp")
+
+NYcounty_df = NYcounty_sf |> st_drop_geometry()
+
+meteor_r <- read_csv("data/meteor_2016to20_NY.csv") |>
+  mutate(
+    year = year(date),
+    tmmn_c = tmmn - 273.15,
+    tmmx_c = tmmx - 273.15,
+    fips = as.character(fips)
+  ) |>
+  select(-tmmn, -tmmx, -th, -county) |>
+  select(fips, year, date, everything()) |>
+  pivot_longer(
+    cols = c("sph": "tmmx_c"),
+    names_to = "var",
+    values_to = "value"
+  ) |>
+  mutate(
+    var = as.character(var),
+    var.char = case_when(
+      var == "sph" ~ "Near-Surface Specific Humidity",
+      var == "vpd" ~ "Vapor Pressure Deficit (kPa)",
+      var == "tmmn_c" ~ "Minimum Near-surface Air Temperature (C)",
+      var == "tmmx_c" ~ "Maximum Near-surface Air Temperature (C)",
+      var == "pr" ~ "Precipitation (mm, daily total)",
+      var == "rmin" ~ "Minimum Near-Surface Relative Humidity (%)",
+      var == "rmax" ~ "Maximum Near-Surface Relative Humidity (%)",
+      var == "srad" ~ "Surface Downwelling Solar Radiation (W/m^2)",
+      var == "vs" ~ "Wind Speed at 10m (m/s)",
+      TRUE ~ NA_character_
+    )
+  )
+
+meteor_summ_yr = meteor_r |>
+  group_by(year, fips, var, var.char) |>
+  summarise(
+    mean_value = mean(value),
+    .groups = "drop"
+  )
+```
+
+Filters {.sidebar}
+-----------------------------------------------------------------------
+
+```{r var_choice}
+
+vars = meteor_summ_yr |> distinct(var.char) |> pull()
+
+radioButtons(
+  inputId = "var_choice",
+  label = h3("Meteorological Variables"),
+  choices = vars,
+  selected = "Maximum Near-surface Air Temperature (C)"
+)
+```
+
+```{r}
+min_year = meteor_summ_yr |> distinct(year) |> min()  # 2016
+max_year = meteor_summ_yr |> distinct(year) |> max()  # 2020
+
+sliderInput(
+  inputId = "yr_range", 
+  label = h3("Choose Year Range"),
+  min = min_year,
+  max = max_year,
+  value = c(min_year, max_year)
+)
+```
+
+Column {data-width=550}
+-----------------------------------------------------------------------
+### Mean Meteorological Values by county in NY state within the chosen years
+
+```{r}
+renderPlotly({
+
+  meteor_sf = meteor_summ_yr |>
+    filter(
+      var.char == input[["var_choice"]],
+      year >= input[["yr_range"]][1],
+      year <= input[["yr_range"]][2]
+    ) |> 
+    group_by(fips) |>
+    summarise(
+      mean_value = mean(mean_value),
+      .groups = "drop"
+    ) |>
+    left_join(NYcounty_sf, by = "fips") |>
+    st_as_sf()
+  
+  map = meteor_sf |>
+    ggplot() +
+    geom_sf(aes(fill = mean_value, text = str_c(namelsad, ": ", round(mean_value, 2))),
+            color = rgb(0.95, 0.95, 0.95, alpha = 0.3),
+            size = 0.1,
+            alpha = 0.8) +
+    scale_fill_viridis_c(
+      name = NULL,
+      option = if_else(
+          str_detect(input[["var_choice"]], "Max|Solar"),
+          "plasma",
+          "mako"
+        ),
+      na.value = "grey80"
+    ) +
+    labs(
+      x = NULL,
+      y = NULL
+    ) +
+    theme_minimal()
+
+  ggplotly(map, tooltip = "text") |> style(hoveron = "fills")
+})
+
+```
+
+Column {data-width=450}
+-----------------------------------------------------------------------
+### Mean Meteorological Values across NY state for each day within the chosen years
+
+```{r}
+renderPlotly({
+
+  meteor_r |>
+    filter(
+      var.char == input[["var_choice"]],
+      year >= input[["yr_range"]][1],
+      year <= input[["yr_range"]][2]
+    ) |> 
+    group_by(var.char, date) |>
+    summarise(
+      mean_value = mean(value)
+    ) |>
+
+    plot_ly(
+      x = ~date, 
+      y = ~mean_value,
+      color = ~mean_value,
+      text = ~str_c(as.character(date), ": ", as.character(round(mean_value, 3))),
+      hoverinfo = "text",
+      type = "scatter",
+      mode = "markers",
+      alpha = 0.5
+    ) |>
+    layout(
+      xaxis = list(
+        range = c(
+          as_date(str_c(input[["yr_range"]][1], "-01-01")),
+          as_date(str_c(input[["yr_range"]][2], "-12-31"))
+        )
+      )
+    )
+})
+```
+
+
+### Variable Distribution
+
+```{r}
+renderPlotly({
+  
+  meteor_season = meteor_r |>
+    filter(
+      var.char == input[["var_choice"]],
+      year >= input[["yr_range"]][1],
+      year <= input[["yr_range"]][2]
+    ) |>
+    mutate(
+      mth = month(date),
+      season = case_when(
+        mth %in% 3:5 ~ 1,
+        mth %in% 6:8 ~ 2,
+        mth %in% 9:11 ~ 3,
+        mth %in% c(1, 2, 12) ~ 4
+      ),
+      season = factor(
+        season,
+        levels = c(1:4),
+        labels = c("Spring", "Summer", "Autumn", "Winter")
+      )
+    ) |> 
+    arrange(season) |>
+    left_join(NYcounty_df, by = "fips") 
+  
+  ggplotly(
+    ggplot(meteor_season, 
+           aes(x = value,
+               fill = season)) +
+    geom_density(alpha = 0.5) +
+    labs(
+      x = input[["var_choice"]]
+    ) +
+    theme_minimal()
+  )
+})
+```
+
+```{r}
+# library(rsconnect)
+# rsconnect::deployApp(
+#     appDir = ".",
+#     appName = "NYmeteor_dashboard"
+# )
+```
+
