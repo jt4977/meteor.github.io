@@ -25,7 +25,7 @@ navbar:
     - text: "Report"
       href: report.html
     - icon: fa-play-circle      
-      href: screencast.html
+      href: "https://youtu.be/BQuubPFnTsk"
       aria-label: "Screencast"      
     - icon: fa-github       
       href: "https://github.com/jt4977/meteor.github.io.git"
