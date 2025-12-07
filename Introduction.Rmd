@@ -1,5 +1,5 @@
 ---
-title: "Report_Intro"
+title: "Introduction"
 author: "Jingtong, He, Kaicheng Mo"
 date: "`r Sys.Date()`"
 output: 

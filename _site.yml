@@ -3,7 +3,7 @@ navbar:
   title: "CLIMASCOPE"
   right: 
     - text: "Proposal"
-      href: meteor.html    
+      href: Proposal.html    
     - text: "Introduction"
       href: Introduction.html
     - text: "Data"
