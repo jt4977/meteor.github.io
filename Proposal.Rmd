@@ -33,7 +33,7 @@ Corresponding county information was downloaded from **[tiger/line Shapefiles](h
 
 **Time-Series and Predictive Modeling: ** Use daily statewide-averaged meteorological series to fit seasonal ARIMAX models with Fourier terms and XGBoost models for forecasting maximum temperature. Compare their performance using a common train–test split, residual diagnostics, and accuracy metrics, and discuss trade-offs between interpretability and predictive flexibility.
 
-**Visualization Deliverables: **Deliver interactive and static visualizations, including maps, seasonal plots, and correlation displays, summarizing key findings clearly and reproducibly.
+**Visualization Deliverables: ** Deliver interactive and static visualizations, including maps, seasonal plots, and correlation displays, summarizing key findings clearly and reproducibly.
 
 **Unsupervised Climate Clustering and PCA:** Use k-means clustering to identify distinct county-level climate types, selecting k=2 via elbow and silhouette diagnostics. Apply PCA to visualize cluster separation in a low-dimensional space and combine boxplots and county maps to summarize and interpret the resulting climate regimes.
 
