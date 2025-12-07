@@ -52,6 +52,7 @@ meteor <- meteor |>
 ny_meteor_all <- ny_county |>
   dplyr::left_join(meteor, by = "fips")
 ```
+
 # Daily statewide mean of maximum temperature in New York (2016–2020)
 ```{r fig1, message=FALSE, warning=FALSE}
 state_tmmx_ts <- ny_meteor_all |>
@@ -72,6 +73,7 @@ ggplot(state_tmmx_ts, aes(x = date, y = tmmx_mean_C)) +
   ) +
   theme_minimal()
 ```
+
 The curve shows the mean daily maximum near‑surface air temperature, averaged across all New York State counties and expressed in degrees Celsius. The pronounced peaks and troughs illustrate the strong intra‑annual seasonal cycle, with warm summers and cold winters repeating over the five‑year period. The series also highlights shorter‑term variability and occasional extreme hot and cold days superimposed on this seasonal pattern.
 
 # Seasonal distribution of daily precipitation across New York State
@@ -99,6 +101,7 @@ ggplot(seasonal_pr, aes(x = season, y = pr)) +
   ) +
   theme_minimal()
 ```
+
 Box‑and‑whisker plots summarise the distribution of county‑level daily total precipitation (mm) for each meteorological season over 2016–2020, displayed on a square‑root scale to make moderate and heavy rainfall more visible. All seasons exhibit a highly right‑skewed distribution, reflecting many days with little or no rain and a smaller number of intense precipitation events. Differences between seasons suggest modest shifts in both typical and extreme rainfall amounts across the annual cycle.
 
 # Relationship between daily maximum temperature and vapor pressure deficit
@@ -121,6 +124,7 @@ ggplot(scatter_dat, aes(x = tmmx_C, y = vpd)) +
   ) +
   theme_minimal()
 ```
+
 Each grey point represents a sampled county–day pair from 2016–2020, plotting daily maximum temperature (°C) against the corresponding vapor pressure deficit (kPa), while the blue line shows a non‑parametric smooth fitted to the cloud of points. The scatter reveals a strong, non‑linear positive association, with VPD increasing rapidly at higher temperatures, consistent with warmer air having a greater capacity for holding water vapour. This pattern indicates that hot conditions in New York are typically accompanied by drier atmospheric demand, which is relevant for both ecological water stress and human heat exposure.
 
 # Average number of hot days (T_max ≥ 30 °C) per county by year
@@ -152,6 +156,7 @@ ggplot(yearly_hot_days, aes(x = factor(year), y = mean_hot_days)) +
   ) +
   theme_minimal()
 ```
+
 Bars display, for each calendar year from 2016 to 2020, the mean number of days per county on which the daily maximum temperature reached or exceeded 30 °C. The metric provides a simple indicator of population‑level exposure to potentially hazardous heat across the state. The inter‑annual differences in bar height indicate that the frequency of such hot days varies appreciably from year to year over the study period.
 
 ```{r map_data_preparation, message=FALSE, warning=FALSE}
@@ -238,6 +243,7 @@ leaflet(ny_map_data, options = leafletOptions(minZoom = 5, maxZoom = 10)) |>
     labFormat = labelFormat(digits = 1)
   )
 ```
+
 County polygons are shaded according to the multi‑year mean daily maximum temperature (°C), with warmer colours indicating higher long‑term averages, and blue markers denoting county centroids. This interactive figure allows detailed exploration of the spatial heterogeneity in temperature across New York State and facilitates linking local climatic conditions to downstream health or environmental outcomes.
 
 # Supplement Materials
