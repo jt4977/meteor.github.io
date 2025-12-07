@@ -31,7 +31,7 @@ Corresponding county information was downloaded from **[tiger/line Shapefiles](h
 # Planned Analyses and Visualizations
 **Exploratory Data Analysis: **Visualize spatial and temporal patterns of temperature, precipitation, and wind speed using histograms, density plots, heatmaps, and county-level maps. Examine correlations and temporal dependencies among key variables.
 
-**: Time-Series and Predictive Modeling: ** Use daily statewide-averaged meteorological series to fit seasonal ARIMAX models with Fourier terms and XGBoost models for forecasting maximum temperature. Compare their performance using a common train–test split, residual diagnostics, and accuracy metrics, and discuss trade-offs between interpretability and predictive flexibility.
+**Time-Series and Predictive Modeling: ** Use daily statewide-averaged meteorological series to fit seasonal ARIMAX models with Fourier terms and XGBoost models for forecasting maximum temperature. Compare their performance using a common train–test split, residual diagnostics, and accuracy metrics, and discuss trade-offs between interpretability and predictive flexibility.
 
 **Visualization Deliverables: **Deliver interactive and static visualizations, including maps, seasonal plots, and correlation displays, summarizing key findings clearly and reproducibly.
 
